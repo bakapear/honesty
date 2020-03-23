@@ -62,13 +62,15 @@ function format (str) {
 }
 
 module.exports = function (html) {
-  let parsed = himalaya.parse(html, { ...himalaya.parseDefaults, includePositions: true })
+  let body = himalaya.parse(html, { ...himalaya.parseDefaults, includePositions: true })
   return function query (selector, ref) {
+    let parsed = body
     if (typeof selector !== 'string') {
       ref = selector
       selector = null
     }
     if (ref) parsed = Array.isArray(ref) ? ref : [ref]
+    else parsed = body.slice()
     let res = []
     if (!selector) res = parsed
     else {
