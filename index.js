@@ -1,18 +1,11 @@
 let himalaya = require('./himalaya')
 
 function pass (node, compare) {
-  let attrib = (node, name) => {
-    if (node.attributes) {
-      let attrib = node.attributes.find(x => x.key === name)
-      if (attrib && attrib.value) return attrib.value
-    }
-    return ''
-  }
   if (compare.any) return true
   return [
-    !compare.tag || node.tagName === compare.tag,
-    !compare.classes.length || compare.classes.every(x => attrib(node, 'class').split(' ').includes(x)),
-    !compare.id || attrib(node, 'id') === compare.id
+    !compare.tag || node.tag === compare.tag,
+    !compare.classes.length || (node.attribs && compare.classes.every(x => (node.attribs.class || '').split(' ').includes(x))),
+    !compare.id || (node.attribs && node.attribs.id === compare.id)
   ].every(x => x)
 }
 

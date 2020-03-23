@@ -1,43 +1,43 @@
-'use strict';
+'use strict'
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, '__esModule', {
   value: true
-});
-exports.formatAttributes = formatAttributes;
-exports.toHTML = toHTML;
+})
+exports.formatAttributes = formatAttributes
+exports.toHTML = toHTML
 
-var _compat = require('./compat');
+let _compat = require('./compat')
 
-function formatAttributes(attributes) {
+function formatAttributes (attributes) {
   return attributes.reduce(function (attrs, attribute) {
-    var key = attribute.key,
-        value = attribute.value;
+    let key = attribute.key
+    let value = attribute.value
 
     if (value === null) {
-      return attrs + ' ' + key;
+      return attrs + ' ' + key
     }
-    var quoteEscape = value.indexOf('\'') !== -1;
-    var quote = quoteEscape ? '"' : '\'';
-    return attrs + ' ' + key + '=' + quote + value + quote;
-  }, '');
+    let quoteEscape = value.indexOf('\'') !== -1
+    let quote = quoteEscape ? '"' : '\''
+    return attrs + ' ' + key + '=' + quote + value + quote
+  }, '')
 }
 
-function toHTML(tree, options) {
+function toHTML (tree, options) {
   return tree.map(function (node) {
     if (node.type === 'text') {
-      return node.content;
+      return node.content
     }
     if (node.type === 'comment') {
-      return '<!--' + node.content + '-->';
+      return '<!--' + node.content + '-->'
     }
-    var tagName = node.tagName,
-        attributes = node.attributes,
-        children = node.children;
+    let tagName = node.tagName
+    let attributes = node.attributes
+    let children = node.children
 
-    var isSelfClosing = (0, _compat.arrayIncludes)(options.voidTags, tagName.toLowerCase());
-    return isSelfClosing ? '<' + tagName + formatAttributes(attributes) + '>' : '<' + tagName + formatAttributes(attributes) + '>' + toHTML(children, options) + '</' + tagName + '>';
-  }).join('');
+    let isSelfClosing = (0, _compat.arrayIncludes)(options.voidTags, tagName.toLowerCase())
+    return isSelfClosing ? '<' + tagName + formatAttributes(attributes) + '>' : '<' + tagName + formatAttributes(attributes) + '>' + toHTML(children, options) + '</' + tagName + '>'
+  }).join('')
 }
 
-exports.default = { toHTML: toHTML };
-//# sourceMappingURL=stringify.js.map
+exports.default = { toHTML: toHTML }
+// # sourceMappingURL=stringify.js.map
