@@ -7,6 +7,6 @@ Uses the [himalaya](https://www.npmjs.com/package/himalaya) package.
 let hy = require("honesty")
 
 let $ = hy('<div id="cheese">Woof</div>')
-let text = $('#cheese').text()
+let text = $('#cheese').text() // Woof
 ...
 ```
