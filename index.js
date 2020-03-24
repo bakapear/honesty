@@ -104,13 +104,22 @@ module.exports = function (html) {
       return trim ? a.trim() : a
     }
     res.find = selector => query(selector, res)
+    res.append = str => {
+      let last = res[res.length - 1].position.end.index
+      while (true) {
+        last--
+        if (html[last + 1] === '<') break
+      }
+      html = html.substr(0, last) + str + html.substring(last + 1, html.length)
+      body = himalaya.parse(html, { ...himalaya.parseDefaults, includePositions: true })
+    }
     return res
   }
 }
 
-function decodeEntities(str) {
+function decodeEntities (str) {
   if (!str) return str
   let regex = /&(nbsp|amp|quot|lt|gt);/g
-  let translate = { nbsp: " ", amp: "&", quot: "\"", lt: "<", gt: ">" }
+  let translate = { nbsp: ' ', amp: '&', quot: '"', lt: '<', gt: '>' }
   return str.replace(regex, (m, e) => translate[e]).replace(/&#(\d+);/gi, (m, e) => String.fromCharCode(parseInt(e, 10)))
 }
