@@ -100,10 +100,17 @@ module.exports = function (html) {
       return trim ? a.replace(/>\s+</g, '') : a
     }
     res.text = trim => {
-      let a = res.html(trim).replace(/<[^>]*>/g, '')
+      let a = decodeEntities(res.html(trim).replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, ''))
       return trim ? a.trim() : a
     }
     res.find = selector => query(selector, res)
     return res
   }
+}
+
+function decodeEntities(str) {
+  if (!str) return str
+  let regex = /&(nbsp|amp|quot|lt|gt);/g
+  let translate = { nbsp: " ", amp: "&", quot: "\"", lt: "<", gt: ">" }
+  return str.replace(regex, (m, e) => translate[e]).replace(/&#(\d+);/gi, (m, e) => String.fromCharCode(parseInt(e, 10)))
 }

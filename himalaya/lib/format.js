@@ -23,6 +23,13 @@ function unquote (str) {
   return str
 }
 
+function decodeEntities (str) {
+  if (!str) return str
+  let regex = /&(nbsp|amp|quot|lt|gt);/g
+  let translate = { nbsp: ' ', amp: '&', quot: '"', lt: '<', gt: '>' }
+  return str.replace(regex, (m, e) => translate[e]).replace(/&#(\d+);/gi, (m, e) => String.fromCharCode(parseInt(e, 10)))
+}
+
 function format (nodes, options) {
   return nodes.map(function (node) {
     let type = node.type
@@ -31,7 +38,7 @@ function format (nodes, options) {
       tag: node.tagName.toLowerCase(),
       attribs: formatAttributes(node.attributes),
       children: format(node.children, options)
-    } : { type: type, content: node.content }
+    } : { type: type, content: decodeEntities(node.content) }
     if (options.includePositions) {
       outputNode.position = node.position
     }
@@ -45,7 +52,7 @@ function formatAttributes (attributes) {
     let parts = splitHead(attribute.trim(), '=')
     let key = parts[0]
     let value = typeof parts[1] === 'string' ? unquote(parts[1]) : null
-    obj[key] = value
+    obj[key] = decodeEntities(value)
   })
   return obj
 }
